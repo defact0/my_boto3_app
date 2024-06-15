@@ -8,13 +8,14 @@ app = FastAPI()
 ACCESS_KEY = 'YOUR_ACCESS_KEY_ID' # YOUR_ACCESS_KEY_ID
 SECRET_KEY = 'YOUR_SECRET_ACCESS_KEY' # YOUR_SECRET_ACCESS_KEY
 
+
 # -------------------------------------------------------------
 # Get Health Check
 #   Request URL - http://127.0.0.1:8000/
 # -------------------------------------------------------------
 @app.get("/")
 def get_health_check():
-    if (ACCESS_KEY is 'YOUR_ACCESS_KEY_ID') or (SECRET_KEY is 'YOUR_SECRET_ACCESS_KEY'):
+    if (ACCESS_KEY == 'YOUR_ACCESS_KEY_ID') or (SECRET_KEY == 'YOUR_SECRET_ACCESS_KEY'):
         status = 'unhealthy'
     else:
         status = 'healthy'
@@ -24,9 +25,10 @@ def get_health_check():
 
 # -------------------------------------------------------------
 # Get Iam Accesskey Users 
-#   Request URL - http://127.0.0.1:8000/iam/accesskey/hours/25000
+#   Request URL - http://127.0.0.1:8000/iam-accesskey?hours=25000
+#   API Best Practices - https://restfulapi.net/resource-naming/
 # -------------------------------------------------------------
-@app.get("/iam/accesskey/hours/{hours}")
+@app.get("/iam-accesskey")
 def get_iam_accesskey_users(hours: int):
     data = boto3_processing(hours)
     json_data = json.dumps(data)
