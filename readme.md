@@ -8,3 +8,4 @@
 
 * Python 3.12.1
 * boto3(Python용 AWS SDK(Boto3))
+* fastapi 0.111.0

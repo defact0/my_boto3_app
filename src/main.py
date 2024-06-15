@@ -1,11 +1,42 @@
-import boto3
+from fastapi import FastAPI, Response
 from datetime import datetime
+import boto3
+import json
+
+app = FastAPI()
+
+ACCESS_KEY = 'YOUR_ACCESS_KEY_ID' # YOUR_ACCESS_KEY_ID
+SECRET_KEY = 'YOUR_SECRET_ACCESS_KEY' # YOUR_SECRET_ACCESS_KEY
+
+# -------------------------------------------------------------
+# Get Health Check
+#   Request URL - http://127.0.0.1:8000/
+# -------------------------------------------------------------
+@app.get("/")
+def get_health_check():
+    if (ACCESS_KEY is 'YOUR_ACCESS_KEY_ID') or (SECRET_KEY is 'YOUR_SECRET_ACCESS_KEY'):
+        status = 'unhealthy'
+    else:
+        status = 'healthy'
+    
+    return {"status": status}
 
 
-def main():
-    ACCESS_KEY = 'YOUR_ACCESS_KEY_ID' # YOUR_ACCESS_KEY_ID
-    SECRET_KEY = 'YOUR_SECRET_ACCESS_KEY' # YOUR_SECRET_ACCESS_KEY
-    INPUT_HOURS = 25000 # HOURS
+# -------------------------------------------------------------
+# Get Iam Accesskey Users 
+#   Request URL - http://127.0.0.1:8000/iam/accesskey/hours/25000
+# -------------------------------------------------------------
+@app.get("/iam/accesskey/hours/{hours}")
+def get_iam_accesskey_users(hours: int):
+    data = boto3_processing(hours)
+    json_data = json.dumps(data)
+    
+    return Response(content=json_data, media_type="application/json")
+
+
+def boto3_processing(INPUT_HOURS):    
+    data = [] # RETURN DATA List
+    data_dict = {} # RETURN DATA Dictionary
     
     # Convert current date and time string to standard format
     current_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -43,7 +74,8 @@ def main():
                                 
                 # Return the User ID and Access Key ID of IAM Users that have been inactive for more than N hours.
                 if INPUT_HOURS < hours_difference_int:
-                    print(UserId + ", " + AccessKeyId)
-
-if __name__ == '__main__':
-    main()
+                    data.append({"UserId": UserId, "AccessKeyId": AccessKeyId})
+    
+    data_dict = {"IAM": data}
+    
+    return data_dict
