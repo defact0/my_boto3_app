@@ -1,12 +1,14 @@
 from fastapi import FastAPI, Response
 from datetime import datetime
-import boto3
-import json
+import boto3, json, os
 
 app = FastAPI()
 
-ACCESS_KEY = 'YOUR_ACCESS_KEY_ID' # YOUR_ACCESS_KEY_ID
-SECRET_KEY = 'YOUR_SECRET_ACCESS_KEY' # YOUR_SECRET_ACCESS_KEY
+# -------------------------------------------------------------
+# Set YOUR ACCESS KEY PAIR!!!
+# -------------------------------------------------------------
+ACCESS_KEY = os.getenv('ACCESS_KEY_ID') # YOUR_ACCESS_KEY_ID
+SECRET_KEY = os.getenv('SECRET_ACCESS_KEY') # YOUR_SECRET_ACCESS_KEY
 
 
 # -------------------------------------------------------------
